@@ -1,0 +1,39 @@
+:root {
+	--view-transition-group-default-duration: 0.25s;
+
+	/* Ease-out Exponential. Based on two to the power ten. */
+	--ease-out-exponential: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+	animation-duration: var(--view-transition-group-default-duration);
+	animation-timing-function: var(--ease-out-exponential);
+}
+
+@media (prefers-reduced-motion) {
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation: none !important;
+	}
+}
+
+:root {
+	font-family: serif;
+}
+
+body {
+	margin: 0;
+	background-image: url('$lib/assets/base-background.png');
+}
+
+img {
+	height: auto;
+	max-width: 100%;
+	object-fit: contain;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
+}

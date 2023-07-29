@@ -1,56 +1,17 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
+	import '$lib/assets/texts.css';
+	import '$lib/global.css';
 	import { transitionTarget } from '$lib/transitionTarget';
 	import type { PageData } from './$types';
-	import './global.css';
 
 	export let data: PageData;
 
 	$: ({ texts, photos, thumbnails, images } = data);
 
 	$: ({ navigationType, targetID } = $transitionTarget);
-
-	$: if (browser) {
-		document.documentElement.className = navigationType;
-	}
 </script>
 
-<div class="hero">
-	<h1>
-		<div>2023.9.17 Sun.</div>
-		<div>The Wedding of Kazuma Kayo</div>
-	</h1>
-
-	<img alt="" {...images.hero} />
-</div>
-
-<div class="columns profile">
-	<div class="groom">
-		<h1>Groom</h1>
-		<img alt="" {...images.groom} />
-		{@html texts['profile-groom']}
-	</div>
-
-	<div class="bride">
-		<h1>Bride</h1>
-		<img alt="" {...images.bride} />
-		{@html texts['profile-bride']}
-	</div>
-</div>
-
-<div class="columns history-interview" style:background-image="url({images.bg2})">
-	<div>
-		<h1>Our History</h1>
-		{@html texts['our-history']}
-	</div>
-
-	<div>
-		<h1>Interview</h1>
-		{@html texts['interview']}
-	</div>
-</div>
-
-<h1>Our Photos</h1>
+<div class={navigationType} />
 
 {#each photos as { id, srcset, src, width, height }}
 	{@const target = `photo-${id}` === targetID}
@@ -72,14 +33,52 @@
 	/>
 {/each}
 
-<div class="backdrop" />
+<div class="hero-area">
+	<div class="texts hero">
+		{@html texts['hero']}
+	</div>
 
-<div class="thumbnails">
+	<img alt="" {...images.hero} />
+</div>
+
+<div class="texts message">
+	{@html texts['message']}
+</div>
+
+<div class="columns profile-area">
+	<div class="texts profile-groom">
+		<img alt="" {...images.groom} />
+
+		{@html texts['profile-groom']}
+	</div>
+
+	<div class="texts profile-bride">
+		<img alt="" {...images.bride} />
+
+		{@html texts['profile-bride']}
+	</div>
+</div>
+
+<div class="columns history-interview-area" style:background-image="url({images.bg2})">
+	<div class="texts our-history">
+		{@html texts['our-history']}
+	</div>
+
+	<div class="texts interview">
+		{@html texts['interview']}
+	</div>
+</div>
+
+<div class="texts our-photos">
+	{@html texts['our-photos']}
+</div>
+
+<div class="thumbnails-area">
 	{#each thumbnails as { id, srcset, src, width, height }}
 		{@const target = `thumbnail-${id}` === targetID}
 
-		<a data-sveltekit-reload href="#{id}"
-			><img
+		<a data-sveltekit-reload href="#{id}">
+			<img
 				class="thumbnail"
 				class:target
 				class:transition-target={target}
@@ -88,24 +87,20 @@
 				{src}
 				{width}
 				{height}
-			/></a
-		>
+			/>
+		</a>
 	{/each}
 </div>
 
 <style>
-	h1 {
-		text-align: center;
-	}
-
-	.hero {
-		color: white;
+	.hero-area {
 		width: 100%;
-		height: 100dvh;
+		height: 100vh;
+		height: 100svh;
 		display: grid;
 		place-items: center;
 	}
-	.hero > img {
+	.hero-area > img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
@@ -119,25 +114,15 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
 		gap: 3vw;
-		padding-inline: max(2vw, (100% - 1600px) / 2);
+		padding-left: max(max(env(safe-area-inset-left), 2vw), (100% - 1600px) / 2);
+		padding-right: max(max(env(safe-area-inset-right), 2vw), (100% - 1600px) / 2);
 	}
 
-	.profile {
-		text-align: center;
-	}
-	.profile .groom > img {
-		clip-path: inset(0 round 43% 57% 56% 44% / 52% 53% 47% 47%);
-	}
-	.profile .bride > img {
-		clip-path: inset(0 round 57% 43% 35% 65% / 51% 53% 47% 49%);
-	}
-
-	.history-interview {
-		color: white;
+	.history-interview-area {
 		background-size: cover;
 	}
 
-	.thumbnails {
+	.thumbnails-area {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(clamp(159px, 30%, 296px), max-content));
 		gap: 1px;
@@ -151,6 +136,8 @@
 	}
 
 	.photo {
+		height: auto;
+		max-width: 100%;
 		max-height: 100%;
 		position: fixed;
 		z-index: 100;
@@ -161,14 +148,45 @@
 		display: none;
 	}
 
-	.backdrop {
-		position: fixed;
-		inset: 0;
-		z-index: 50;
-		background-color: black;
-	}
-	.backdrop:not(.photo.target ~ .backdrop) {
+	.photo.target ~ * {
 		opacity: 0;
-		visibility: hidden;
+	}
+
+	:global(body):has(.photo.target) {
+		background: black;
+
+		/* Disable scroll */
+		/* https://dev.classmethod.jp/articles/dialog-element-and-modal-pseudo-class/ */
+		overflow: hidden;
+	}
+
+	.transition-target {
+		view-transition-name: target-photo;
+	}
+
+	:global(html):has(:is(.to-photo, .to-thumbnails))::view-transition-old(target-photo),
+	:global(html):has(:is(.to-photo, .to-thumbnails))::view-transition-new(target-photo) {
+		/* Use normal blending, so the new view sits on top and obscures the old view */
+		mix-blend-mode: normal;
+		/* Make the height the same as the group, meaning the view size might not match its aspect-ratio. */
+		height: 100%;
+		/* Clip any overflow of the view */
+		overflow: clip;
+	}
+
+	/* The old view is the thumbnail */
+	:global(html):has(.to-photo)::view-transition-old(target-photo),
+	:global(html):has(.to-thumbnails)::view-transition-new(target-photo) {
+		/* Maintain the aspect ratio of the view, by shrinking it to fit within the bounds of the element */
+		object-fit: contain;
+	}
+
+	/* The new view is the full image */
+	:global(html):has(.to-photo)::view-transition-new(target-photo),
+	:global(html):has(.to-thumbnails)::view-transition-old(target-photo) {
+		/* Maintain the aspect ratio of the view, by growing it to cover the bounds of the element */
+		object-fit: cover;
+		/* Prevent the default animation, so both views remain opacity:1 throughout the transition */
+		animation: none;
 	}
 </style>

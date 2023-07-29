@@ -1,0 +1,52 @@
+.texts {
+	font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.texts h1 {
+	font-style: italic;
+}
+
+.texts h2 {
+	font-weight: normal;
+}
+
+.texts p {
+}
+
+.texts strong {
+}
+
+.texts.hero h1 {
+	font-style: normal;
+	text-align: center;
+	color: white;
+}
+
+.texts.message {
+	text-align: center;
+}
+.texts.message h1 {
+	font-style: normal;
+	writing-mode: vertical-rl;
+	margin: 1em auto;
+}
+
+.texts.profile-groom,
+.texts.profile-bride {
+	text-align: center;
+}
+.texts.profile-groom img {
+	clip-path: inset(0 round 43% 57% 56% 44% / 52% 53% 47% 47%);
+}
+.texts.profile-bride img {
+	clip-path: inset(0 round 57% 43% 35% 65% / 51% 53% 47% 49%);
+}
+
+.texts.our-history,
+.texts.interview {
+	color: white;
+}
+
+.texts.our-photos {
+	text-align: center;
+}
