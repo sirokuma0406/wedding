@@ -9,9 +9,11 @@ import type { PageServerLoad } from './$types';
 
 // ls -1 src/lib/assets/texts | xargs -I{} basename {} .md | xargs -I{} echo \'{}\', | pbcopy
 const allTexts = [
+	'hero',
 	'interview',
+	'message',
 	'our-history',
-	'our-new-house',
+	'our-photos',
 	'profile-bride',
 	'profile-groom'
 ] as const;
