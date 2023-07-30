@@ -1,6 +1,6 @@
-export interface AsPictureModule {
+export interface AsPictureModule<Format extends string> {
 	sources: {
-		[format: string]: {
+		[format in Format]?: {
 			src: string;
 			w: number;
 		}[];

@@ -42,7 +42,7 @@ export const load = (async () => {
 	const photos = getAllPhotos();
 	const thumbnails = getAllThumbnails();
 
-	const hero = Object.values<AsPictureModule>(
+	const hero = Object.values<AsPictureModule<'webp'>>(
 		import.meta.glob('$lib/assets/images/hero.*', {
 			import: 'default',
 			eager: true,
@@ -53,16 +53,14 @@ export const load = (async () => {
 			}
 		})
 	).map<Omit<Image, 'id'>>(({ sources, img }) => ({
-		srcset: Object.values(sources)[0]
-			.map((_) => `${_.src} ${_.w}w`)
-			.join(', '),
+		srcset: sources.webp?.map((_) => `${_.src} ${_.w}w`).join(', '),
 		src: img.src,
 		width: img.w,
 		height: img.h
 	}))[0];
 
 	const { groom, bride } = Object.fromEntries(
-		Object.entries<AsPictureModule>(
+		Object.entries<AsPictureModule<'webp'>>(
 			import.meta.glob('$lib/assets/images/{groom,bride}.*', {
 				import: 'default',
 				eager: true,
@@ -76,9 +74,7 @@ export const load = (async () => {
 		).map<[string, Omit<Image, 'id'>]>(([path, { sources, img }]) => [
 			pathToID(path),
 			{
-				srcset: Object.values(sources)[0]
-					.map((_) => `${_.src} ${_.w}w`)
-					.join(', '),
+				srcset: sources.webp?.map((_) => `${_.src} ${_.w}w`).join(', '),
 				src: img.src,
 				width: img.w,
 				height: img.h
