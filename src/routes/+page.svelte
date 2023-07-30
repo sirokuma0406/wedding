@@ -13,21 +13,18 @@
 
 <div class={navigationType} />
 
-{#each photos as { id, full: { srcset, src, width, height }, thumbnail }}
+{#each photos as { id, full, thumbnail }}
 	{@const target = `photo-${id}` === targetID}
 
 	<img
 		class="photo"
 		class:target
 		class:transition-target={target}
+		alt=""
 		loading="lazy"
 		decoding="async"
-		alt=""
 		{id}
-		{srcset}
-		{src}
-		{width}
-		{height}
+		{...full}
 		style:background-image="url({thumbnail.src})"
 	/>
 {/each}
@@ -37,7 +34,13 @@
 		{@html texts['hero']}
 	</div>
 
-	<img alt="" {...images.hero} />
+	<img
+		alt=""
+		loading="lazy"
+		decoding="async"
+		{...images.hero.full}
+		style:background-image="url({images.hero.placeholder.src})"
+	/>
 </div>
 
 <div class="texts message">
@@ -46,13 +49,25 @@
 
 <div class="columns profile-area">
 	<div class="texts profile-groom">
-		<img alt="" {...images.groom} />
+		<img
+			alt=""
+			loading="lazy"
+			decoding="async"
+			{...images.groom.full}
+			style:background-image="url({images.groom.placeholder.src})"
+		/>
 
 		{@html texts['profile-groom']}
 	</div>
 
 	<div class="texts profile-bride">
-		<img alt="" {...images.bride} />
+		<img
+			alt=""
+			loading="lazy"
+			decoding="async"
+			{...images.bride.full}
+			style:background-image="url({images.bride.placeholder.src})"
+		/>
 
 		{@html texts['profile-bride']}
 	</div>
@@ -73,21 +88,18 @@
 </div>
 
 <div class="thumbnails-area">
-	{#each photos as { id, thumbnail: { srcset, src, width, height }, placeholder }}
+	{#each photos as { id, thumbnail, placeholder }}
 		{@const target = `thumbnail-${id}` === targetID}
 
 		<a data-sveltekit-reload href="#{id}">
+			<!-- loading="lazy" にするとレイアウトシフトが起きてしまうので eager -->
 			<img
 				class="thumbnail"
 				class:target
 				class:transition-target={target}
-				loading="lazy"
-				decoding="async"
 				alt=""
-				{srcset}
-				{src}
-				{width}
-				{height}
+				decoding="async"
+				{...thumbnail}
 				style:background-image="url({placeholder.src})"
 			/>
 		</a>
@@ -106,6 +118,7 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+		background-size: cover;
 		pointer-events: none;
 		user-select: none;
 		position: absolute;

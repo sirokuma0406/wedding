@@ -1,31 +1,27 @@
-import type { Image } from '$lib/Image';
 import { pathToID } from '$lib/pathToID';
 
-interface ImageMeta {
+export interface ImageMeta {
 	src: string;
 	width: number;
 	height: number;
 }
 
 interface Photo {
-	id: Image['id'];
+	id: string;
 	full: Image;
 	thumbnail: Image;
 	placeholder: Image;
 }
 
-export function getAllPhotos(): Photo[] {
-	const all = import.meta.glob<ImageMeta | ImageMeta[]>('$lib/assets/photos/*', {
-		import: 'default',
-		eager: true,
-		query: {
-			as: `meta:${(['src', 'width', 'height'] satisfies (keyof ImageMeta)[]).join(';')}`,
-			format: 'webp',
-			w: [100, 400, 800, 1600, 2400].join(';')
-		}
-	});
+interface Image {
+	src: string;
+	width: number;
+	height: number;
+	srcset?: string;
+}
 
-	return Object.entries(all).map<Photo>(([path, _images]) => {
+export function toPhotos(imported: Record<string, ImageMeta | ImageMeta[]>): Photo[] {
+	return Object.entries(imported).map<Photo>(([path, _images]) => {
 		const images = Array.isArray(_images) ? _images : [_images];
 		images.sort((l, r) => l.width - r.width);
 
@@ -35,17 +31,17 @@ export function getAllPhotos(): Photo[] {
 		return {
 			id,
 			full: {
-				id,
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				...images.at(-1)!,
 				srcset: images.map((_) => `${_.src} ${_.width}w`).join(', ')
 			},
 			thumbnail: {
-				id,
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				...thumbnails.at(-1)!,
 				srcset: thumbnails.map((_) => `${_.src} ${_.width}w`).join(', ')
 			},
 			placeholder: {
-				id,
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				...thumbnails.at(0)!
 			}
 		};

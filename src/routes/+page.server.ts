@@ -1,6 +1,4 @@
-import type { Image } from '$lib/Image';
-import { getAllPhotos } from '$lib/getAllPhotos';
-import { pathToID } from '$lib/pathToID';
+import { toPhotos, type ImageMeta } from '$lib/toPhotos';
 import { micromark } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm';
 import type { PageServerLoad } from './$types';
@@ -17,21 +15,6 @@ const allTexts = [
 ] as const;
 
 type AllTexts = (typeof allTexts)[number];
-
-interface AsPictureModule<Format extends string> {
-	sources: {
-		[format in Format]?: {
-			src: string;
-			w: number;
-		}[];
-	};
-
-	img: {
-		src: string;
-		w: number;
-		h: number;
-	};
-}
 
 export const load = (async () => {
 	const texts = Object.fromEntries(
@@ -52,50 +35,47 @@ export const load = (async () => {
 		)
 	) as Record<AllTexts, string>;
 
-	const photos = getAllPhotos();
-
-	const hero = Object.values(
-		import.meta.glob<AsPictureModule<'webp'>>('$lib/assets/images/hero.*', {
+	const photos = toPhotos(
+		import.meta.glob<ImageMeta | ImageMeta[]>('$lib/assets/photos/*', {
 			import: 'default',
 			eager: true,
 			query: {
-				as: 'picture',
+				as: `meta:${(['src', 'width', 'height'] satisfies (keyof ImageMeta)[]).join(';')}`,
+				format: 'webp',
+				w: [100, 400, 800, 1600, 2400].join(';')
+			}
+		})
+	);
+
+	const hero = toPhotos(
+		import.meta.glob<ImageMeta | ImageMeta[]>('$lib/assets/images/hero.*', {
+			import: 'default',
+			eager: true,
+			query: {
+				as: `meta:${(['src', 'width', 'height'] satisfies (keyof ImageMeta)[]).join(';')}`,
 				format: 'webp',
 				w: [400, 800, 1600].join(';')
 			}
 		})
-	).map<Omit<Image, 'id'>>(({ sources, img }) => ({
-		srcset: sources.webp?.map((_) => `${_.src} ${_.w}w`).join(', '),
-		src: img.src,
-		width: img.w,
-		height: img.h
-	}))[0];
+	)[0];
 
 	const { groom, bride } = Object.fromEntries(
-		Object.entries(
-			import.meta.glob<AsPictureModule<'webp'>>('$lib/assets/images/{groom,bride}.*', {
+		toPhotos(
+			import.meta.glob<ImageMeta | ImageMeta[]>('$lib/assets/images/{groom,bride}.*', {
 				import: 'default',
 				eager: true,
 				query: {
-					as: 'picture',
+					as: `meta:${(['src', 'width', 'height'] satisfies (keyof ImageMeta)[]).join(';')}`,
 					format: 'webp',
-					w: [250, 500].join(';'),
+					w: [100, 250, 500].join(';'),
 					aspect: '4:3'
 				}
 			})
-		).map<[string, Omit<Image, 'id'>]>(([path, { sources, img }]) => [
-			pathToID(path),
-			{
-				srcset: sources.webp?.map((_) => `${_.src} ${_.w}w`).join(', '),
-				src: img.src,
-				width: img.w,
-				height: img.h
-			}
-		])
+		).map((_) => [_.id, _])
 	);
 
-	const bg2 = Object.values<string>(
-		import.meta.glob('$lib/assets/images/bg2.*', {
+	const bg2 = Object.values(
+		import.meta.glob<string>('$lib/assets/images/bg2.*', {
 			import: 'default',
 			eager: true,
 			query: {
