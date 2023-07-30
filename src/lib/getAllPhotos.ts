@@ -15,7 +15,7 @@ interface Photo {
 }
 
 export function getAllPhotos(): Photo[] {
-	const all = import.meta.glob<ImageMeta[]>('$lib/assets/photos/*', {
+	const all = import.meta.glob<ImageMeta | ImageMeta[]>('$lib/assets/photos/*', {
 		import: 'default',
 		eager: true,
 		query: {
@@ -25,7 +25,8 @@ export function getAllPhotos(): Photo[] {
 		}
 	});
 
-	return Object.entries(all).map<Photo>(([path, images]) => {
+	return Object.entries(all).map<Photo>(([path, _images]) => {
+		const images = Array.isArray(_images) ? _images : [_images];
 		images.sort((l, r) => l.width - r.width);
 
 		const thumbnails = images.filter((_) => _.width <= 400);
