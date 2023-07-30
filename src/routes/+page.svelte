@@ -6,16 +6,15 @@
 
 	export let data: PageData;
 
-	$: ({ texts, photos, thumbnails, images } = data);
+	$: ({ texts, photos, images } = data);
 
 	$: ({ navigationType, targetID } = $transitionTarget);
 </script>
 
 <div class={navigationType} />
 
-{#each photos as { id, srcset, src, width, height }}
+{#each photos as { id, full: { srcset, src, width, height }, thumbnail }}
 	{@const target = `photo-${id}` === targetID}
-	{@const thumbnail = thumbnails.find((_) => _.id === id)}
 
 	<img
 		class="photo"
@@ -29,7 +28,7 @@
 		{src}
 		{width}
 		{height}
-		style:background-image="url({thumbnail?.src})"
+		style:background-image="url({thumbnail.src})"
 	/>
 {/each}
 
@@ -74,7 +73,7 @@
 </div>
 
 <div class="thumbnails-area">
-	{#each thumbnails as { id, srcset, src, width, height }}
+	{#each photos as { id, thumbnail: { srcset, src, width, height }, placeholder }}
 		{@const target = `thumbnail-${id}` === targetID}
 
 		<a data-sveltekit-reload href="#{id}">
@@ -82,11 +81,14 @@
 				class="thumbnail"
 				class:target
 				class:transition-target={target}
+				loading="lazy"
+				decoding="async"
 				alt=""
 				{srcset}
 				{src}
 				{width}
 				{height}
+				style:background-image="url({placeholder.src})"
 			/>
 		</a>
 	{/each}
@@ -133,6 +135,7 @@
 		width: 100%;
 		aspect-ratio: 1 / 1;
 		object-fit: cover;
+		background-size: cover;
 	}
 
 	.photo {

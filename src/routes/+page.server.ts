@@ -1,7 +1,5 @@
-import type { AsPictureModule } from '$lib/AsPictureModule';
 import type { Image } from '$lib/Image';
 import { getAllPhotos } from '$lib/getAllPhotos';
-import { getAllThumbnails } from '$lib/getAllThumbnails';
 import { pathToID } from '$lib/pathToID';
 import { micromark } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm';
@@ -19,6 +17,21 @@ const allTexts = [
 ] as const;
 
 type AllTexts = (typeof allTexts)[number];
+
+interface AsPictureModule<Format extends string> {
+	sources: {
+		[format in Format]?: {
+			src: string;
+			w: number;
+		}[];
+	};
+
+	img: {
+		src: string;
+		w: number;
+		h: number;
+	};
+}
 
 export const load = (async () => {
 	const texts = Object.fromEntries(
@@ -40,10 +53,9 @@ export const load = (async () => {
 	) as Record<AllTexts, string>;
 
 	const photos = getAllPhotos();
-	const thumbnails = getAllThumbnails();
 
-	const hero = Object.values<AsPictureModule<'webp'>>(
-		import.meta.glob('$lib/assets/images/hero.*', {
+	const hero = Object.values(
+		import.meta.glob<AsPictureModule<'webp'>>('$lib/assets/images/hero.*', {
 			import: 'default',
 			eager: true,
 			query: {
@@ -60,8 +72,8 @@ export const load = (async () => {
 	}))[0];
 
 	const { groom, bride } = Object.fromEntries(
-		Object.entries<AsPictureModule<'webp'>>(
-			import.meta.glob('$lib/assets/images/{groom,bride}.*', {
+		Object.entries(
+			import.meta.glob<AsPictureModule<'webp'>>('$lib/assets/images/{groom,bride}.*', {
 				import: 'default',
 				eager: true,
 				query: {
@@ -98,7 +110,6 @@ export const load = (async () => {
 	return {
 		texts,
 		photos,
-		thumbnails,
 		images: {
 			hero,
 			groom,

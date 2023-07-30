@@ -1,23 +1,52 @@
-import type { AsPictureModule } from '$lib/AsPictureModule';
 import type { Image } from '$lib/Image';
 import { pathToID } from '$lib/pathToID';
 
-export function getAllPhotos(): Image[] {
-	return Object.entries<AsPictureModule<'webp'>>(
-		import.meta.glob('$lib/assets/photos/*', {
-			import: 'default',
-			eager: true,
-			query: {
-				as: 'picture',
-				format: 'webp',
-				w: [100, 400, 800, 1600, 2400].join(';')
+interface ImageMeta {
+	src: string;
+	width: number;
+	height: number;
+}
+
+interface Photo {
+	id: Image['id'];
+	full: Image;
+	thumbnail: Image;
+	placeholder: Image;
+}
+
+export function getAllPhotos(): Photo[] {
+	const all = import.meta.glob<ImageMeta[]>('$lib/assets/photos/*', {
+		import: 'default',
+		eager: true,
+		query: {
+			as: `meta:${(['src', 'width', 'height'] satisfies (keyof ImageMeta)[]).join(';')}`,
+			format: 'webp',
+			w: [100, 400, 800, 1600, 2400].join(';')
+		}
+	});
+
+	return Object.entries(all).map<Photo>(([path, images]) => {
+		images.sort((l, r) => l.width - r.width);
+
+		const thumbnails = images.filter((_) => _.width <= 400);
+		const id = pathToID(path);
+
+		return {
+			id,
+			full: {
+				id,
+				...images.at(-1)!,
+				srcset: images.map((_) => `${_.src} ${_.width}w`).join(', ')
+			},
+			thumbnail: {
+				id,
+				...thumbnails.at(-1)!,
+				srcset: thumbnails.map((_) => `${_.src} ${_.width}w`).join(', ')
+			},
+			placeholder: {
+				id,
+				...thumbnails.at(0)!
 			}
-		})
-	).map<Image>(([path, { sources, img }]) => ({
-		id: pathToID(path),
-		srcset: sources.webp?.map((_) => `${_.src} ${_.w}w`).join(', '),
-		src: img.src,
-		width: img.w,
-		height: img.h
-	}));
+		};
+	});
 }
