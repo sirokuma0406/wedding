@@ -43,8 +43,10 @@
 	/>
 </div>
 
-<div class="texts message">
-	{@html texts['message']}
+<div class="columns message-area">
+	<div class="texts message">
+		{@html texts['message']}
+	</div>
 </div>
 
 <div class="columns profile-area">
