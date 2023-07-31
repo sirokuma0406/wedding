@@ -114,8 +114,10 @@
 		width: 100%;
 		height: 100vh;
 		height: 100svh;
+		max-height: min(235vw, 1500px);
 		display: grid;
 		place-items: center;
+		position: relative;
 	}
 	.hero-area > img {
 		width: 100%;
