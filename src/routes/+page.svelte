@@ -98,6 +98,7 @@
 				class:target
 				class:transition-target={target}
 				alt=""
+				loading="lazy"
 				decoding="async"
 				{...thumbnail}
 				style:background-image="url({placeholder.src})"
@@ -139,7 +140,10 @@
 
 	.thumbnails-area {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(clamp(159px, 30%, 296px), max-content));
+		grid-template-columns: repeat(
+			auto-fit,
+			minmax(clamp(100px, -5px + 25%, min(220px + 3.5%, 350px)), 1fr)
+		);
 		gap: 1px;
 	}
 
