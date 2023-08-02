@@ -16,7 +16,7 @@ const allTexts = [
 
 type AllTexts = (typeof allTexts)[number];
 
-export const load = (async ({ params }) => {
+export const load = (async () => {
 	const texts = Object.fromEntries(
 		await Promise.all(
 			allTexts.map(async (id) => {
@@ -90,7 +90,6 @@ export const load = (async ({ params }) => {
 	return {
 		texts,
 		photos,
-		pickup: photos.find((_) => _.id === params.id),
 		images: {
 			hero,
 			groom,

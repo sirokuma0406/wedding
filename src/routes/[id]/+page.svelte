@@ -3,7 +3,7 @@
 
 	export let data: PageData;
 
-	$: ({ id, full, thumbnail } = data.pickup!);
+	$: ({ id, full, thumbnail } = data.photo);
 </script>
 
 <svelte:head>
