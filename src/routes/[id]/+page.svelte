@@ -6,14 +6,6 @@
 	$: ({ id, full, thumbnail } = data.photo);
 </script>
 
-<svelte:head>
-	<style>
-		body:is(body):is(body) {
-			background: black;
-		}
-	</style>
-</svelte:head>
-
 <img
 	class="photo"
 	alt=""
@@ -23,6 +15,14 @@
 	{...full}
 	style:background-image="url({thumbnail.src})"
 />
+
+<svelte:head>
+	<style>
+		body:is(body):is(body) {
+			background: black;
+		}
+	</style>
+</svelte:head>
 
 <style>
 	.transition-target {
