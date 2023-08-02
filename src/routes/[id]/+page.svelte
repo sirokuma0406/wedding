@@ -8,7 +8,7 @@
 
 <svelte:head>
 	<style>
-		body {
+		body:is(body):is(body) {
 			background: black;
 		}
 	</style>
