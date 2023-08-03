@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import { params } from '$lib/preparePageTransition';
 	import type { PageData } from './$types';
 
@@ -70,7 +71,7 @@
 
 <div class="thumbnails-area">
 	{#each photos as { id, thumbnail, placeholder }}
-		<a href="/wedding/{id}/">
+		<a href="{base}/{id}/">
 			<img
 				class="thumbnail"
 				class:target-photo={id === targetID}
