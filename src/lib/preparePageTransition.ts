@@ -17,8 +17,12 @@ export const params: Readable<{
 }> = _params;
 
 export function preparePageTransition(): void {
+	const transitioning = {
+		current: new AbortController()
+	};
+
 	// before navigating, start a new transition
-	beforeNavigate((navigation) => {
+	beforeNavigate(async (navigation) => {
 		_params.set({
 			from: navigation.from?.params ?? {},
 			to: navigation.to?.params ?? {}
@@ -26,19 +30,50 @@ export function preparePageTransition(): void {
 
 		if (!document.startViewTransition) return;
 
-		if (navigation.type === 'goto') {
-			// do nothing
-		} else if (navigation.type === 'link' && navigation.to) {
+		if (navigation.type === 'goto') return;
+
+		let callback: () => PromiseLike<void>;
+
+		if (navigation.type === 'link' && navigation.to) {
 			navigation.cancel();
 
 			const href = navigation.to.url.href;
 
-			document.startViewTransition(() => goto(href));
+			callback = () => goto(href);
 		} else {
 			const navigationComplete = complete();
 
-			document.startViewTransition(() => navigationComplete);
+			callback = () => navigationComplete;
 		}
+
+		transitioning.current.abort();
+
+		const changing = new AbortController();
+		const aborted = () => changing.signal.aborted;
+
+		transitioning.current = changing;
+
+		if (aborted()) return;
+
+		const transition = document.startViewTransition(callback);
+
+		await transition.updateCallbackDone;
+
+		if (aborted()) {
+			transition.skipTransition();
+			return;
+		}
+
+		await transition.ready;
+
+		if (aborted()) {
+			transition.skipTransition();
+			return;
+		}
+
+		await transition.finished;
+
+		if (aborted()) return;
 	});
 
 	const resolvers = new Set<() => void>();
