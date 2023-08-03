@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { params } from '$lib/preparePageTransition';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
 
 	$: ({ texts, photos, images } = data);
-	$: targetID = 'thumbnail';
+	$: targetID = $params.from.id ?? $params.to.id;
 </script>
 
 <div class="hero-area">
@@ -69,13 +70,10 @@
 
 <div class="thumbnails-area">
 	{#each photos as { id, thumbnail, placeholder }}
-		{@const target = `thumbnail-${id}` === targetID}
-
 		<a href="/wedding/{id}/">
 			<img
 				class="thumbnail"
-				class:target
-				class:transition-target={target}
+				class:target-photo={id === targetID}
 				alt=""
 				loading="lazy"
 				decoding="async"
@@ -134,9 +132,5 @@
 		aspect-ratio: 1 / 1;
 		object-fit: cover;
 		background-size: cover;
-	}
-
-	.transition-target {
-		view-transition-name: target-photo;
 	}
 </style>
