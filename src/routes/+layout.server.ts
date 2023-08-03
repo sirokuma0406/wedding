@@ -1,7 +1,7 @@
 import { toPhotos, type ImageMeta } from '$lib/toPhotos';
 import { micromark } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm';
-import type { PageServerLoad } from './$types';
+import type { LayoutServerLoad } from './$types';
 
 // ls -1 src/lib/assets/texts | xargs -I{} basename {} .md | xargs -I{} echo \'{}\', | pbcopy
 const allTexts = [
@@ -97,4 +97,4 @@ export const load = (async () => {
 			bg2
 		}
 	};
-}) satisfies PageServerLoad;
+}) satisfies LayoutServerLoad;
