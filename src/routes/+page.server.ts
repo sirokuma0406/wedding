@@ -1,7 +1,5 @@
-import { pathToID } from '$lib/pathToID';
+import { loadTexts } from '$lib/server/loadTexts';
 import { toPhotos, type ImageMeta } from '$lib/toPhotos';
-import { micromark } from 'micromark';
-import { gfm, gfmHtml } from 'micromark-extension-gfm';
 import type { PageServerLoad as PageLoad } from './$types';
 
 export const load = (async () => {
@@ -17,31 +15,7 @@ export const load = (async () => {
 		})
 	);
 
-	// ls -1 src/lib/assets/texts | xargs -I{} basename {} .md | xargs -I{} echo '|'\'{}\' | pbcopy
-	type AllTexts =
-		| 'hero'
-		| 'interview'
-		| 'message'
-		| 'our-history'
-		| 'our-photos'
-		| 'profile-bride'
-		| 'profile-groom';
-
-	const texts = Object.fromEntries(
-		Object.entries(
-			import.meta.glob<string>('$lib/assets/texts/*.md', {
-				import: 'default',
-				eager: true,
-				as: 'raw'
-			})
-		).map(([path, mdBody]) => [
-			pathToID(path),
-			micromark(mdBody, {
-				extensions: [gfm()],
-				htmlExtensions: [gfmHtml()]
-			})
-		])
-	) as Record<AllTexts, string>;
+	const texts = loadTexts();
 
 	const hero = toPhotos(
 		import.meta.glob<ImageMeta | ImageMeta[]>('$lib/assets/images/hero.*', {
