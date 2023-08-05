@@ -1,40 +1,36 @@
+import { pathToID } from '$lib/pathToID';
 import { toPhotos, type ImageMeta } from '$lib/toPhotos';
 import { micromark } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm';
 import type { PageLoad } from './$types';
 
-// ls -1 src/lib/assets/texts | xargs -I{} basename {} .md | xargs -I{} echo \'{}\', | pbcopy
-const allTexts = [
-	'hero',
-	'interview',
-	'message',
-	'our-history',
-	'our-photos',
-	'profile-bride',
-	'profile-groom'
-] as const;
-
-type AllTexts = (typeof allTexts)[number];
-
 export const load = (async ({ parent }) => {
 	const { photos } = await parent();
 
-	const texts = Object.fromEntries(
-		await Promise.all(
-			allTexts.map(async (id) => {
-				const mdBody = await import(`$lib/assets/texts/${id}.md?raw`).then(
-					(_) => _.default as string
-				);
+	// ls -1 src/lib/assets/texts | xargs -I{} basename {} .md | xargs -I{} echo '|'\'{}\' | pbcopy
+	type AllTexts =
+		| 'hero'
+		| 'interview'
+		| 'message'
+		| 'our-history'
+		| 'our-photos'
+		| 'profile-bride'
+		| 'profile-groom';
 
-				return [
-					id,
-					micromark(mdBody, {
-						extensions: [gfm()],
-						htmlExtensions: [gfmHtml()]
-					})
-				] as const;
+	const texts = Object.fromEntries(
+		Object.entries(
+			import.meta.glob<string>('$lib/assets/texts/*.md', {
+				import: 'default',
+				eager: true,
+				as: 'raw'
 			})
-		)
+		).map(([path, mdBody]) => [
+			pathToID(path),
+			micromark(mdBody, {
+				extensions: [gfm()],
+				htmlExtensions: [gfmHtml()]
+			})
+		])
 	) as Record<AllTexts, string>;
 
 	const hero = toPhotos(
