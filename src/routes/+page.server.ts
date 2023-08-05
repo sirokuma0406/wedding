@@ -4,8 +4,18 @@ import { micromark } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm';
 import type { PageServerLoad as PageLoad } from './$types';
 
-export const load = (async ({ parent }) => {
-	const { photos } = await parent();
+export const load = (async () => {
+	const photos = toPhotos(
+		import.meta.glob<ImageMeta | ImageMeta[]>('$lib/assets/photos/*', {
+			import: 'default',
+			eager: true,
+			query: {
+				as: `meta:${(['src', 'width', 'height'] satisfies (keyof ImageMeta)[]).join(';')}`,
+				format: 'webp',
+				w: [100, 400, 800, 1600, 2400].join(';')
+			}
+		})
+	);
 
 	// ls -1 src/lib/assets/texts | xargs -I{} basename {} .md | xargs -I{} echo '|'\'{}\' | pbcopy
 	type AllTexts =
