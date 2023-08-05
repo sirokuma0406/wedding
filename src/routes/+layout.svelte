@@ -5,8 +5,7 @@
 
 	preparePageTransition();
 
-	$: hasFromID = !!$params.from.id;
-	$: hasToID = !!$params.to.id;
+	$: [hasFromID, hasToID] = [!!$params.from.id, !!$params.to.id];
 </script>
 
 <slot />
