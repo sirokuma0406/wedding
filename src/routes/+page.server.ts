@@ -13,7 +13,11 @@ export const load = (async () => {
 				w: [100, 400, 800, 1600, 2400].join(';')
 			}
 		})
-	);
+	).map(({ id, thumbnail, placeholder }) => ({
+		id,
+		thumbnail,
+		placeholder
+	}));
 
 	const texts = loadTexts();
 
