@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import type { PageLoad } from './$types';
+import type { PageServerLoad as PageLoad } from './$types';
 
 export const load = (async ({ params: { id }, parent }) => {
 	const { photos } = await parent();

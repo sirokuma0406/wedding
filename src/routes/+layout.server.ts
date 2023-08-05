@@ -1,5 +1,5 @@
 import { toPhotos, type ImageMeta } from '$lib/toPhotos';
-import type { LayoutLoad } from './$types';
+import type { LayoutServerLoad as LayoutLoad } from './$types';
 
 export const load = (async () => {
 	const photos = toPhotos(

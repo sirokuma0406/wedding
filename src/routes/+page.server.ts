@@ -2,7 +2,7 @@ import { pathToID } from '$lib/pathToID';
 import { toPhotos, type ImageMeta } from '$lib/toPhotos';
 import { micromark } from 'micromark';
 import { gfm, gfmHtml } from 'micromark-extension-gfm';
-import type { PageLoad } from './$types';
+import type { PageServerLoad as PageLoad } from './$types';
 
 export const load = (async ({ parent }) => {
 	const { photos } = await parent();
