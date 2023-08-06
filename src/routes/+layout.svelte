@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from '$app/stores';
+	import { title } from '$lib/assets/meta.json';
 	import '$lib/assets/texts.css';
 	import '$lib/global.css';
 	import { params, preparePageTransition } from '$lib/preparePageTransition';
@@ -7,6 +9,12 @@
 
 	$: [hasFromID, hasToID] = [!!$params.from.id, !!$params.to.id];
 </script>
+
+<svelte:head>
+	<meta property="og:title" content={title} />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content={$page.url.toString()} />
+</svelte:head>
 
 <slot />
 
