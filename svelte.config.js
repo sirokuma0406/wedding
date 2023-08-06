@@ -11,6 +11,9 @@ const config = {
 		adapter: adapter(),
 		paths: {
 			base: '/wedding'
+		},
+		prerender: {
+			origin: 'https://sirokuma0406.github.io'
 		}
 	}
 };
