@@ -11,6 +11,8 @@
 </script>
 
 <svelte:head>
+	<title>{title}</title>
+
 	<meta property="og:title" content={title} />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content={$page.url.toString()} />
