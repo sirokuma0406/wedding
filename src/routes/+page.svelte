@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import { page } from '$app/stores';
 	import { params } from '$lib/preparePageTransition';
 	import type { PageData } from './$types';
 
@@ -8,6 +9,10 @@
 	$: ({ texts, photos, images } = data);
 	$: targetID = $params.from.id ?? $params.to.id;
 </script>
+
+<svelte:head>
+	<meta property="og:image" content="{$page.url.origin}{images.hero.full.src}" />
+</svelte:head>
 
 <div class="hero-area">
 	<div class="texts hero">
