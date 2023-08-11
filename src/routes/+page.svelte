@@ -16,6 +16,7 @@
 
 <div class="hero-area">
 	<div class="texts hero">
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		{@html texts['hero']}
 	</div>
 
@@ -31,6 +32,7 @@
 
 <div class="columns message-area">
 	<div class="texts message">
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		{@html texts['message']}
 	</div>
 </div>
@@ -46,6 +48,7 @@
 			style:background-image="url({images.groom.placeholder.src})"
 		/>
 
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		{@html texts['profile-groom']}
 	</div>
 
@@ -59,21 +62,25 @@
 			style:background-image="url({images.bride.placeholder.src})"
 		/>
 
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		{@html texts['profile-bride']}
 	</div>
 </div>
 
 <div class="columns history-interview-area" style:background-image="url({images.bg2})">
 	<div class="texts our-history">
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		{@html texts['our-history']}
 	</div>
 
 	<div class="texts interview">
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		{@html texts['interview']}
 	</div>
 </div>
 
 <div class="texts our-photos">
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html texts['our-photos']}
 </div>
 
