@@ -20,6 +20,7 @@
 	</div>
 
 	<img
+		id="img-hero"
 		alt=""
 		loading="lazy"
 		decoding="async"
@@ -37,6 +38,7 @@
 <div class="columns profile-area">
 	<div class="texts profile-groom">
 		<img
+			id="img-groom"
 			alt=""
 			loading="lazy"
 			decoding="async"
@@ -49,6 +51,7 @@
 
 	<div class="texts profile-bride">
 		<img
+			id="img-bride"
 			alt=""
 			loading="lazy"
 			decoding="async"
