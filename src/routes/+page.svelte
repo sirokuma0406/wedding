@@ -124,13 +124,24 @@
 	.columns {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-		gap: 3vw;
+		gap: 2em 3vw;
 		padding-left: max(env(safe-area-inset-left), 16px, 2vw, (100% - 1600px) / 2);
 		padding-right: max(env(safe-area-inset-right), 16px, 2vw, (100% - 1600px) / 2);
 	}
 
+	.message-area {
+		padding-top: 2em;
+	}
+
+	.profile-area {
+		padding-top: 2em;
+		padding-bottom: 4em;
+	}
+
 	.history-interview-area {
 		background-size: cover;
+		padding-top: 2em;
+		padding-bottom: 4em;
 	}
 
 	.thumbnails-area {
