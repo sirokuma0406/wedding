@@ -100,6 +100,11 @@
 	{/each}
 </div>
 
+<div class="texts footer">
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+	{@html texts['footer']}
+</div>
+
 <style>
 	.hero-area {
 		width: 100%;
