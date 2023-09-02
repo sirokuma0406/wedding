@@ -150,7 +150,6 @@
 	}
 
 	.thumbnails-area {
-		background-color: black;
 		display: grid;
 		grid-template-columns: repeat(
 			auto-fit,
