@@ -61,8 +61,12 @@
 
 .texts.our-photos {
 	text-align: center;
+	color: white;
+	background-color: black;
 }
 
 .texts.footer {
 	text-align: center;
+	color: white;
+	background-color: black;
 }

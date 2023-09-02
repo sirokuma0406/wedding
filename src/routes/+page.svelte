@@ -79,7 +79,7 @@
 	</div>
 </div>
 
-<div class="texts our-photos">
+<div class="texts our-photos hidden-border">
 	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html texts['our-photos']}
 </div>
@@ -100,7 +100,7 @@
 	{/each}
 </div>
 
-<div class="texts footer">
+<div class="texts footer hidden-border">
 	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html texts['footer']}
 </div>
@@ -150,6 +150,7 @@
 	}
 
 	.thumbnails-area {
+		background-color: black;
 		display: grid;
 		grid-template-columns: repeat(
 			auto-fit,
@@ -164,5 +165,10 @@
 		aspect-ratio: 1 / 1;
 		object-fit: cover;
 		background-size: cover;
+	}
+
+	.hidden-border {
+		border: solid 0 transparent;
+		border-width: 1px 0;
 	}
 </style>
