@@ -27,6 +27,10 @@
 .texts strong {
 }
 
+.texts a:any-link {
+	color: inherit;
+}
+
 .texts.hero h1 {
 	font-style: normal;
 	text-align: center;
