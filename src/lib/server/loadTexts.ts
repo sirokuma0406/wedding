@@ -4,6 +4,7 @@ import { gfm, gfmHtml } from 'micromark-extension-gfm';
 
 // ls -1 src/lib/assets/texts | xargs -I{} basename {} .md | xargs -I{} echo '|'\'{}\' | pbcopy
 type AllTexts =
+	| 'footer'
 	| 'hero'
 	| 'interview'
 	| 'message'
