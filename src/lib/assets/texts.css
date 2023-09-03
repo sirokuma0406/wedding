@@ -43,8 +43,6 @@
 }
 .texts.message h1 {
 	font-style: normal;
-	writing-mode: vertical-rl;
-	margin: 1em auto;
 }
 
 .texts.profile-groom,
